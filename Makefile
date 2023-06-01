@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Isrc/libo_rate -MMD
+CFLAGS = -Wall -Werror -Isrc/libo_rate -MMD $(shell pkg-config --libs json-c)
 TARGET = bin/optimal_rate
 OBJDIR = obj
 SRCDIR = src
@@ -26,22 +26,22 @@ LIBNAME = $(OBJ_LIBRATE_DIR)/o_rate.a
 all: $(TARGET)
 
 $(TARGET): $(RATEOBJS) $(LIBNAME)
-    $(CC) $^ -o $@
+	$(CC) $^ -o $@
 
 $(OBJ_RATE_DIR)/%.o: $(SRC_RATE_DIR)/%.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_LIBRATE_DIR)/%.o: $(SRC_LIBRATE_DIR)/%.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBNAME): $(LIBOBJS)
-    ar rcs $@ $^
+	ar rcs $@ $^
 
 -include $(DEP_RATE)
 -include $(DEP_LIBRATE)
 
 clean:
-    $(RM) -r $(OBJ_RATE_DIR)/* $(OBJ_LIBRATE_DIR)/* $(LIBNAME)
+	$(RM) -r $(OBJ_RATE_DIR)/* $(OBJ_LIBRATE_DIR)/* $(LIBNAME)
 
 clean_all:
-    $(RM) -r $(OBJ_RATE_DIR)/* $(OBJ_LIBRATE_DIR)/* $(TARGET) $(LIBNAME)
+	$(RM) -r $(OBJ_RATE_DIR)/* $(OBJ_LIBRATE_DIR)/* $(TARGET) $(LIBNAME)
