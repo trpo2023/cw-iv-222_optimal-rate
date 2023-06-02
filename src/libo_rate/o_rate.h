@@ -5,3 +5,5 @@ struct Expense {
   int internet;
   int sms;
 };
+
+struct Expense get_expense_from_file(char *filename, int average);
