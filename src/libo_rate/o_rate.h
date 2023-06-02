@@ -6,7 +6,6 @@ struct Expense {
   int sms;
 };
 
-struct Expense get_expense_from_file(char *filename, int average);
 struct Rate
 {
     char name[15];
@@ -15,3 +14,7 @@ struct Rate
     int internet;
     int sms;
 };
+
+struct Expense get_expense_from_file(char *filename, int average);
+
+struct Rate find_optimal_rate(struct Expense expense);
