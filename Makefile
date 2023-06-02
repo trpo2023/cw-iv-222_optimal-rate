@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Isrc/libo_rate -MMD $(shell pkg-config --libs json-c)
+CFLAGS = -Wall -Werror -Isrc/libo_rate -MMD 
+LFLAGS = $(shell pkg-config --libs json-c)
 TARGET = bin/optimal_rate
 OBJDIR = obj
 SRCDIR = src
@@ -26,7 +27,7 @@ LIBNAME = $(OBJ_LIBRATE_DIR)/o_rate.a
 all: $(TARGET)
 
 $(TARGET): $(RATEOBJS) $(LIBNAME)
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ $(LFLAGS)
 
 $(OBJ_RATE_DIR)/%.o: $(SRC_RATE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
