@@ -4,20 +4,34 @@
 #include <json-c/json.h>
 #include <o_rate.h>
 
-struct Expense get_expense_from_file(char *filename, int average) {
-  FILE *fp = fopen(filename, "r");
-  char buffer[4096];
+void error(char *error_var, const char *error_msg) {
+  memcpy(error_var, error_msg, 150);
+  return;
+}
+
+struct Expense get_expense_from_file(char *filename, int average,
+                                     char *error_msg) {
+  char buffer[MAX_LEN];
   struct json_object *json;
   struct json_object *expenses;
   struct Expense temp_expense = {0, 0, 0};
+  struct Expense err_expense = {-1, -1, -1};
   int n_dates;
+  int correct = 1;
 
+  FILE *fp = fopen(filename, "r");
+  if (!fp) {
+    char temp[50];
+    sprintf(temp, "не удалось открыть файл '%s'", filename);
+    error(error_msg, temp);
+    return err_expense;
+  }
   fread(buffer, 4096, 1, fp);
   fclose(fp);
 
   json = json_tokener_parse(buffer);
 
-  json_object_object_get_ex(json, "expenses", &expenses);
+  correct *= json_object_object_get_ex(json, "expenses", &expenses);
   int start_point = 0;
   n_dates = json_object_array_length(expenses);
 
@@ -25,6 +39,10 @@ struct Expense get_expense_from_file(char *filename, int average) {
     start_point = n_dates - 12;
 
   for (int i = start_point; i < n_dates; i++) {
+    if (!correct) {
+      error(error_msg, "некорректный json файл");
+      return err_expense;
+    }
     struct json_object *estimated_date;
     struct json_object *consumption;
     struct json_object *minutes;
@@ -34,10 +52,11 @@ struct Expense get_expense_from_file(char *filename, int average) {
     int int_internet;
     int int_sms;
     estimated_date = json_object_array_get_idx(expenses, i);
-    json_object_object_get_ex(estimated_date, "consumption", &consumption);
-    json_object_object_get_ex(consumption, "minutes", &minutes);
-    json_object_object_get_ex(consumption, "internet", &internet);
-    json_object_object_get_ex(consumption, "sms", &sms);
+    correct *=
+        json_object_object_get_ex(estimated_date, "consumption", &consumption);
+    correct *= json_object_object_get_ex(consumption, "minutes", &minutes);
+    correct *= json_object_object_get_ex(consumption, "internet", &internet);
+    correct *= json_object_object_get_ex(consumption, "sms", &sms);
     int_minutes = json_object_get_int(minutes);
     int_internet = json_object_get_int(internet);
     int_sms = json_object_get_int(sms);
@@ -66,7 +85,7 @@ struct Expense get_expense_from_file(char *filename, int average) {
   return temp_expense;
 }
 
-struct Rate find_optimal_rate(struct Expense expense) {
+struct Rate find_optimal_rate(struct Expense expense, char *error_msg) {
   struct Rate err_rate = {"", -1, -1, -1, -1};
 
   char buffer[4096];
@@ -75,6 +94,11 @@ struct Rate find_optimal_rate(struct Expense expense) {
   size_t n_rates;
 
   FILE *fp = fopen("../thirdparty/rates.json", "r");
+  if (!fp) {
+    error(error_msg, "Не удалось загрузить базу тарифов, проверьте целостность "
+                     "файлов программы");
+    return err_rate;
+  }
   fread(buffer, 4096, 1, fp);
   fclose(fp);
 
@@ -107,11 +131,12 @@ struct Rate find_optimal_rate(struct Expense expense) {
       json_object_object_get_ex(rate, "price", &price);
       json_object_object_get_ex(rate, "name", &name);
       temp_rate.price = json_object_get_int(price);
-      memcpy(temp_rate.name, json_object_get_string(name), sizeof(char) * 15);
+      memcpy(temp_rate.name, json_object_get_string(name), sizeof(char) * 20);
 
       return temp_rate;
     }
   }
-
+  error(error_msg,
+        "не удалось найти подходящий тариф - ваши расходы слишком большие");
   return err_rate;
 }
