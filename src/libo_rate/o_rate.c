@@ -66,53 +66,52 @@ struct Expense get_expense_from_file(char *filename, int average) {
   return temp_expense;
 }
 
-struct Rate find_optimal_rate(struct Expense expense)
-{
-    struct Rate err_rate = { "", -1, -1, -1, -1 };
+struct Rate find_optimal_rate(struct Expense expense) {
+  struct Rate err_rate = {"", -1, -1, -1, -1};
 
-    char buffer[4096];
-    struct json_object json;
-    struct json_objectrates;
-    size_t n_rates;
+  char buffer[4096];
+  struct json_object *json;
+  struct json_object *rates;
+  size_t n_rates;
 
-    FILE fp = fopen("../thirdparty/rates.json", "r");
-    fread(buffer, 4096, 1, fp);
-    fclose(fp);
+  FILE *fp = fopen("../thirdparty/rates.json", "r");
+  fread(buffer, 4096, 1, fp);
+  fclose(fp);
 
-    json = json_tokener_parse(buffer);
+  json = json_tokener_parse(buffer);
 
-    json_object_object_get_ex(json, "rates", &rates);
-    n_rates = json_object_array_length(rates);
+  json_object_object_get_ex(json, "rates", &rates);
+  n_rates = json_object_array_length(rates);
 
-    for (int i = 0; i < n_rates; i++)
-    {
-        struct Rate temp_rate;
-        struct json_objectrate;
-        struct json_object price;
-        struct json_objectname;
-        struct json_object packages;
-        struct json_objectminutes;
-        struct json_object internet;
-        struct json_objectsms;
-        rate = json_object_array_get_idx(rates, i);
-        json_object_object_get_ex(rate, "packages", &packages);
-        json_object_object_get_ex(packages, "minutes", &minutes);
-        json_object_object_get_ex(packages, "internet", &internet);
-        json_object_object_get_ex(packages, "sms", &sms);
-        temp_rate.minutes = json_object_get_int(minutes);
-        temp_rate.internet = json_object_get_int(internet);
-        temp_rate.sms = json_object_get_int(sms);
+  for (int i = 0; i < n_rates; i++) {
+    struct Rate temp_rate;
+    struct json_object *rate;
+    struct json_object *price;
+    struct json_object *name;
+    struct json_object *packages;
+    struct json_object *minutes;
+    struct json_object *internet;
+    struct json_object *sms;
+    rate = json_object_array_get_idx(rates, i);
+    json_object_object_get_ex(rate, "packages", &packages);
+    json_object_object_get_ex(packages, "minutes", &minutes);
+    json_object_object_get_ex(packages, "internet", &internet);
+    json_object_object_get_ex(packages, "sms", &sms);
+    temp_rate.minutes = json_object_get_int(minutes);
+    temp_rate.internet = json_object_get_int(internet);
+    temp_rate.sms = json_object_get_int(sms);
 
-        if ( expense.minutes <= temp_rate.minutes && expense.internet <= temp_rate.internet && expense.sms <= temp_rate.sms )
-        {
-            json_object_object_get_ex(rate, "price", &price);
-            json_object_object_get_ex(rate, "name", &name);
-            temp_rate.price = json_object_get_int(price);
-            memcpy(temp_rate.name, json_object_get_string(name), sizeof(char) * 15);
+    if (expense.minutes <= temp_rate.minutes &&
+        expense.internet <= temp_rate.internet &&
+        expense.sms <= temp_rate.sms) {
+      json_object_object_get_ex(rate, "price", &price);
+      json_object_object_get_ex(rate, "name", &name);
+      temp_rate.price = json_object_get_int(price);
+      memcpy(temp_rate.name, json_object_get_string(name), sizeof(char) * 15);
 
-            return temp_rate;
-        }
+      return temp_rate;
     }
+  }
 
-    return err_rate;
+  return err_rate;
 }
