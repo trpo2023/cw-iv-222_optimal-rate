@@ -1,8 +1,7 @@
 #pragma once
 
-struct Expense
-{
-    int minutes;
-    int internet;
-    int sms;
+struct Expense {
+  int minutes;
+  int internet;
+  int sms;
 };
