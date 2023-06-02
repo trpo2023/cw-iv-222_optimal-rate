@@ -4,7 +4,13 @@
 #include <json-c/json.h>
 #include <o_rate.h>
 
-struct Expense get_expense_from_file(char *filename, int average) {
+void error(char *error_var, const char *error_msg)
+{
+    memcpy(error_var, error_msg, 100);
+    return;
+}
+
+struct Expense get_expense_from_file(char *filename, int average, char *error_msg) {
   FILE *fp = fopen(filename, "r");
   char buffer[4096];
   struct json_object *json;
@@ -66,7 +72,7 @@ struct Expense get_expense_from_file(char *filename, int average) {
   return temp_expense;
 }
 
-struct Rate find_optimal_rate(struct Expense expense) {
+struct Rate find_optimal_rate(struct Expense expense, char *error_msg) {
   struct Rate err_rate = {"", -1, -1, -1, -1};
 
   char buffer[4096];

@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <o_rate.h>
 
 int main() {
   int mode;
   char filename[25];
+  char *error_msg = malloc(sizeof(char) * 100);
   printf("Данная программа поможет вам подобрать оптимальный тариф, исходя "
          "из ваших расходов по пакетам.\nВыберите режим подбора:\n\n1 - "
          "Подбор осуществляется в соответствии с максимальными расходами\n2 "
@@ -15,10 +17,10 @@ int main() {
   printf("Введите название json файла, содержащего данные о ваших "
          "расходах: ");
   scanf("%s", filename);
-  struct Expense expense = get_expense_from_file(filename, mode);
+  struct Expense expense = get_expense_from_file(filename, mode, error_msg);
   printf("\nВаши расходы:\nМинуты: %d, гигабайты: %d, сообщения: %d\n\n",
          expense.minutes, expense.internet, expense.sms);
-  struct Rate optimal_rate = find_optimal_rate(expense);
+  struct Rate optimal_rate = find_optimal_rate(expense, error_msg);
   if (optimal_rate.minutes != 2147483647)
     printf("Был подобран оптимальный тариф %s за %dр.\nВ него "
            "входит\nМинуты: %d, гигабайты: %d, сообщения: %d\n",
