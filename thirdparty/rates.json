@@ -1,0 +1,67 @@
+{
+    "rates": [
+      {
+        "name": "Минимум",
+        "price": 380,
+        "packages": {
+          "minutes": 250,
+          "internet": 7,
+          "sms": 0
+        }
+      },
+      {
+        "name": "Звонки",
+        "price": 450,
+        "packages": {
+          "minutes": 600,
+          "internet": 7,
+          "sms": 0
+        }
+      },
+      {
+        "name": "Интернет",
+        "price": 450,
+        "packages": {
+          "minutes": 250,
+          "internet": 20,
+          "sms": 0
+        }
+      },
+      {
+        "name": "МегаТариф",
+        "price": 550,
+        "packages": {
+          "minutes": 600,
+          "internet": 35,
+          "sms": 100
+        }
+      },
+      {
+        "name": "Максимум",
+        "price": 720,
+        "packages": {
+          "minutes": 900,
+          "internet": 45,
+          "sms": 300
+        }
+      },
+      {
+        "name": "VIP",
+        "price": 1000,
+        "packages": {
+          "minutes": 1500,
+          "internet": 50,
+          "sms": 300
+        }
+      },
+      {
+        "name": "Премиум",
+        "price": 2000,
+        "packages": {
+          "minutes": 2147483647,
+          "internet": 60,
+          "sms": 300
+        }
+      }
+    ]
+  }
