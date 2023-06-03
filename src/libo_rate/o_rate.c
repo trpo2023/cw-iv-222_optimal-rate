@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 
 #include <json-c/json.h>
 #include <o_rate.h>
@@ -7,6 +8,28 @@
 void error(char *error_var, const char *error_msg) {
   memcpy(error_var, error_msg, 150);
   return;
+}
+
+int searchFile(char *filename, const char *reldir) {
+    DIR *dir;
+    struct dirent *entry;
+
+    dir = opendir(reldir);
+    if (dir == NULL) {
+        return 1;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, filename) == 0) {
+            strcpy(filename, reldir);
+            strcat(filename, entry->d_name);
+            closedir(dir);
+            return 0;
+        }
+    }
+
+    closedir(dir);
+    return 1;
 }
 
 struct Expense get_expense_from_file(char *filename, int average,
