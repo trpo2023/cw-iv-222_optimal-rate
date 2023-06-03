@@ -1,6 +1,6 @@
+#include <dirent.h>
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>
 
 #include <json-c/json.h>
 #include <o_rate.h>
@@ -11,25 +11,25 @@ void error(char *error_var, const char *error_msg) {
 }
 
 int searchFile(char *filename, const char *reldir) {
-    DIR *dir;
-    struct dirent *entry;
+  DIR *dir;
+  struct dirent *entry;
 
-    dir = opendir(reldir);
-    if (dir == NULL) {
-        return 1;
-    }
-
-    while ((entry = readdir(dir)) != NULL) {
-        if (strcmp(entry->d_name, filename) == 0) {
-            strcpy(filename, reldir);
-            strcat(filename, entry->d_name);
-            closedir(dir);
-            return 0;
-        }
-    }
-
-    closedir(dir);
+  dir = opendir(reldir);
+  if (dir == NULL) {
     return 1;
+  }
+
+  while ((entry = readdir(dir)) != NULL) {
+    if (strcmp(entry->d_name, filename) == 0) {
+      strcpy(filename, reldir);
+      strcat(filename, entry->d_name);
+      closedir(dir);
+      return 0;
+    }
+  }
+
+  closedir(dir);
+  return 1;
 }
 
 struct Expense get_expense_from_file(char *filename, int average,
@@ -42,8 +42,10 @@ struct Expense get_expense_from_file(char *filename, int average,
   int n_dates;
   int correct = 1;
 
-  if (searchFile(filename, "") && searchFile(filename, "thirdparty/") && searchFile(filename, "../thirdparty/")) {
-    error(error_msg, "не удалось найти файл, возможно вам стоит проверить его имя или поменять текущую директорию");
+  if (searchFile(filename, "") && searchFile(filename, "thirdparty/") &&
+      searchFile(filename, "../thirdparty/")) {
+    error(error_msg, "не удалось найти файл, возможно вам стоит проверить его "
+                     "имя или поменять текущую директорию");
     return err_expense;
   }
 
