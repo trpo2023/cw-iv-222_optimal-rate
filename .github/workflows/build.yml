@@ -16,4 +16,6 @@ jobs:
           sudo apt install -y pkg-config
           sudo apt install -y libjson-c-dev
       - name: Build application
-        run: make
+        run: |
+          make
+          make test
