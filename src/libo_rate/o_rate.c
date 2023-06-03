@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 
 #include <json-c/json.h>
 #include <o_rate.h>
@@ -7,6 +8,28 @@
 void error(char *error_var, const char *error_msg) {
   memcpy(error_var, error_msg, 150);
   return;
+}
+
+int searchFile(char *filename, const char *reldir) {
+    DIR *dir;
+    struct dirent *entry;
+
+    dir = opendir(reldir);
+    if (dir == NULL) {
+        return 1;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, filename) == 0) {
+            strcpy(filename, reldir);
+            strcat(filename, entry->d_name);
+            closedir(dir);
+            return 0;
+        }
+    }
+
+    closedir(dir);
+    return 1;
 }
 
 struct Expense get_expense_from_file(char *filename, int average,
@@ -18,6 +41,11 @@ struct Expense get_expense_from_file(char *filename, int average,
   struct Expense err_expense = {-1, -1, -1};
   int n_dates;
   int correct = 1;
+
+  if (searchFile(filename, "") && searchFile(filename, "thirdparty/") && searchFile(filename, "../thirdparty/")) {
+    error(error_msg, "не удалось найти файл, возможно вам стоит проверить его имя или поменять текущую директорию");
+    return err_expense;
+  }
 
   FILE *fp = fopen(filename, "r");
   if (!fp) {
@@ -93,7 +121,12 @@ struct Rate find_optimal_rate(struct Expense expense, char *error_msg) {
   struct json_object *rates;
   size_t n_rates;
 
-  FILE *fp = fopen("../thirdparty/rates.json", "r");
+  char filename[100] = "rates.json";
+  searchFile(filename, "");
+  searchFile(filename, "thirdparty/");
+  searchFile(filename, "../thirdparty/");
+
+  FILE *fp = fopen(filename, "r");
   if (!fp) {
     error(error_msg, "Не удалось загрузить базу тарифов, проверьте целостность "
                      "файлов программы");

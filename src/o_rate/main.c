@@ -5,7 +5,7 @@
 
 int main() {
   int mode;
-  char filename[25];
+  char filename[100];
   char *error_msg = malloc(sizeof(char) * 150);
   printf("Данная программа поможет вам подобрать оптимальный тариф, исходя "
          "из ваших расходов по пакетам.\nВыберите режим подбора:\n\n1 - "
@@ -15,7 +15,7 @@ int main() {
   printf("Введите номер режима: ");
   mode = getchar() - 49;
   printf("Введите название json файла, содержащего данные о ваших "
-         "расходах: ");
+         "расходах (файл должен находиться в директории thirdparty):\n");
   scanf("%s", filename);
   struct Expense expense = get_expense_from_file(filename, mode, error_msg);
   if (expense.minutes < 0) {
