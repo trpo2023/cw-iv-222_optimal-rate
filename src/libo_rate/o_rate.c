@@ -6,7 +6,7 @@
 #include <o_rate.h>
 
 void error(char *error_var, const char *error_msg) {
-  memcpy(error_var, error_msg, 150);
+  memcpy(error_var, error_msg, 200);
   return;
 }
 
