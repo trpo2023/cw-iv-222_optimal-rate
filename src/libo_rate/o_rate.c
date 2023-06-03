@@ -42,6 +42,11 @@ struct Expense get_expense_from_file(char *filename, int average,
   int n_dates;
   int correct = 1;
 
+  if (searchFile(filename, "") && searchFile(filename, "thirdparty/") && searchFile(filename, "../thirdparty/")) {
+    error(error_msg, "не удалось найти файл, возможно вам стоит проверить его имя или поменять текущую директорию");
+    return err_expense;
+  }
+
   FILE *fp = fopen(filename, "r");
   if (!fp) {
     char temp[50];
@@ -116,7 +121,12 @@ struct Rate find_optimal_rate(struct Expense expense, char *error_msg) {
   struct json_object *rates;
   size_t n_rates;
 
-  FILE *fp = fopen("../thirdparty/rates.json", "r");
+  char filename[100] = "rates.json";
+  searchFile(filename, "");
+  searchFile(filename, "thirdparty/");
+  searchFile(filename, "../thirdparty/");
+
+  FILE *fp = fopen(filename, "r");
   if (!fp) {
     error(error_msg, "Не удалось загрузить базу тарифов, проверьте целостность "
                      "файлов программы");
