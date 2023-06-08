@@ -1,0 +1,107 @@
+{
+    "expenses": [
+        {
+            "date": "31.01.2022",
+            "consumption":
+            {
+                "minutes": 252,
+                "internet": 5,
+                "sms": 10
+            }
+        },
+        {
+            "date": "28.02.2022",
+        },
+        {
+            "date": "31.03.2022",
+            "consumption":
+            {
+                "minutes": 333,
+                "internet": 22,
+                "sms": 11
+            }
+        },
+        {
+            "date": "30.04.2022",
+            "consumption":
+            {
+                "minutes": 123,
+                "internet": 45,
+                "sms": 6
+            }
+        },
+        {
+            "date": "31.05.2022",
+            "consumption":
+            {
+                "minutes": 10,
+                "internet": 2,
+                "sms": 0
+            }
+        },
+        {
+            "date": "30.06.2022",
+            "consumption":
+            {
+                "minutes": 250,
+                "internet": 7,
+                "sms": 0
+            }
+        },
+        {
+            "date": "31.07.2022",
+            "consumption":
+            {
+                "minutes": 250,
+                "internet": 7,
+                "sms": 0
+            }
+        },
+        {
+            "date": "31.08.2022",
+            "consumption":
+            {
+                "minutes": 250,
+                "internet": 7,
+                "sms": 1
+            }
+        },
+        {
+            "date": "30.09.2022",
+            "consumption":
+            {
+                "minutes": 111,
+                "internet": 22,
+                "sms": 3
+            }
+        },
+        {
+            "date": "31.10.2022",
+            "consumption":
+            {
+                "minutes": 321,
+                "internet": 12,
+                "sms": 3
+            }
+        },
+        {
+            "date": "30.11.2022",
+            "consumption":
+            {
+                "minutes": 250,
+                "internet": 52,
+                "sms": 3
+            }
+        },
+        {
+            "date": "31.12.2022",
+            "consumption":
+            {
+                "minutes": 143,
+                "internet": 16,
+                "sms": 7
+            }
+        }
+        
+    ]
+}
